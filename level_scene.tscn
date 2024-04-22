@@ -1,0 +1,114 @@
+[gd_scene load_steps=13 format=3 uid="uid://b17pnc4e43uyy"]
+
+[ext_resource type="Script" path="res://level_scene.gd" id="1_4g7ad"]
+[ext_resource type="Texture2D" uid="uid://chb7oyypnuavt" path="res://assets/background.png" id="1_6b05j"]
+[ext_resource type="PackedScene" uid="uid://4lhxms2rh2cb" path="res://player_2.tscn" id="2_8vril"]
+[ext_resource type="PackedScene" uid="uid://d2lqi177tb6um" path="res://player.tscn" id="3_22pd3"]
+[ext_resource type="PackedScene" uid="uid://cj7yqmugij7fd" path="res://ball.tscn" id="5_v2srr"]
+[ext_resource type="Script" path="res://Player1Label.gd" id="6_ay32i"]
+[ext_resource type="Script" path="res://Player2Label.gd" id="7_0hfco"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1onrt"]
+size = Vector2(20, 1.75565)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_34djd"]
+size = Vector2(20, 1.75565)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tmmst"]
+size = Vector2(0.165387, 18.6984)
+
+[sub_resource type="LabelSettings" id="LabelSettings_esx27"]
+font_size = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_bqakx"]
+font_size = 8
+
+[node name="LevelScene" type="Node2D"]
+script = ExtResource("1_4g7ad")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(160, 90)
+texture = ExtResource("1_6b05j")
+
+[node name="border" type="Node2D" parent="."]
+scale = Vector2(-80.206, -4.73261)
+
+[node name="Top" type="StaticBody2D" parent="border"]
+
+[node name="UpperBounds" type="CollisionShape2D" parent="border/Top"]
+position = Vector2(-1.98239, 0.085124)
+rotation = 3.14159
+scale = Vector2(0.199588, -0.384445)
+shape = SubResource("RectangleShape2D_1onrt")
+
+[node name="Bottom" type="StaticBody2D" parent="border"]
+position = Vector2(0, 3.22418e-06)
+
+[node name="UpperBounds2" type="CollisionShape2D" parent="border/Bottom"]
+position = Vector2(-1.9824, -38.034)
+rotation = 3.14159
+scale = Vector2(0.200586, -0.384445)
+shape = SubResource("RectangleShape2D_34djd")
+
+[node name="ScoreZone1" type="Area2D" parent="border"]
+position = Vector2(0.0249358, -19.017)
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="border/ScoreZone1"]
+position = Vector2(-7.45058e-09, 1.14441e-05)
+scale = Vector2(1, 1.98888)
+shape = SubResource("RectangleShape2D_tmmst")
+
+[node name="ScoreZone2" type="Area2D" parent="border"]
+position = Vector2(-4.00219, -19.017)
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="border/ScoreZone2"]
+position = Vector2(-4.76837e-07, 1.14441e-05)
+scale = Vector2(1, 1.98888)
+shape = SubResource("RectangleShape2D_tmmst")
+
+[node name="Player1" parent="." instance=ExtResource("3_22pd3")]
+position = Vector2(12, 88)
+
+[node name="Player2" parent="." instance=ExtResource("2_8vril")]
+position = Vector2(308, 90)
+
+[node name="ball" parent="." instance=ExtResource("5_v2srr")]
+position = Vector2(154, 91)
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player1Label" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 5.0
+offset_right = 49.0
+offset_bottom = 28.0
+text = "Player 1: 0"
+label_settings = SubResource("LabelSettings_esx27")
+uppercase = true
+script = ExtResource("6_ay32i")
+
+[node name="Player2Label" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 255.0
+offset_top = 6.0
+offset_right = 300.0
+offset_bottom = 29.0
+text = "PLAYER 2: 0"
+label_settings = SubResource("LabelSettings_bqakx")
+script = ExtResource("7_0hfco")
+
+[connection signal="player_1_update_score" from="." to="UI/Player1Label" method="_on_level_scene_player_1_update_score"]
+[connection signal="player_2_update_score" from="." to="UI/Player2Label" method="_on_level_scene_player_2_update_score"]
+[connection signal="area_entered" from="border/ScoreZone1" to="." method="_on_score_zone_1_area_entered"]
+[connection signal="body_entered" from="border/ScoreZone1" to="." method="_on_score_zone_1_body_entered"]
+[connection signal="area_entered" from="border/ScoreZone2" to="." method="_on_score_zone_2_area_entered"]
+[connection signal="body_entered" from="border/ScoreZone2" to="." method="_on_score_zone_2_body_entered"]
